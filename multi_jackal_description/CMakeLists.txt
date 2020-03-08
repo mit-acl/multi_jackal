@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   lms1xx
   nav_msgs
-  pointgrey_camera_driver
+  #pointgrey_camera_driver
   robot_state_publisher
   roslaunch
   gazebo_ros

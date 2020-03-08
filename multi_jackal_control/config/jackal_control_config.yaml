@@ -27,7 +27,7 @@ jackal_velocity_controller:
   linear:
     x:
       has_velocity_limits    : true
-      max_velocity           : 2.0   # m/s
+      max_velocity           : 10.0   # m/s //Was 2
       has_acceleration_limits: true
       max_acceleration       : 20.0   # m/s^2
   angular:

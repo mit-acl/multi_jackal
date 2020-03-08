@@ -13,26 +13,27 @@
      The config might require a 'config_id' for further customisation. -->
 
 <launch>
-  <arg name="ns"        default="jackal0"/>
+  <arg name="ns"        default="JA01"/>
   <arg name="config"    default="base"/>
   <arg name="config_id" default="0"/>
-  <arg name="world"     default="empty.world"/>
-  <arg name="gui"       default="false"/>
+  <arg name="world_name"     default="empty.world"/>
+  <arg name="gui"       default="true"/>
   <arg name="rviz"      default="false"/>
 
   <!-- Start Gazebo. -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="use_sim_time" value="true"/>
     <arg name="gui"          value="$(arg gui)"/>
-    <arg name="world_name"   value="$(find multi_jackal_tutorials)/worlds/$(arg world)"/>
+    <arg name="world_name"   value="$(find multi_jackal_tutorials)/worlds/$(arg world_name)"/>
   </include>
-  
+
+ 
   <!-- Spawn the robot. -->
   <include file="$(find multi_jackal_base)/launch/jackal_base.launch">
     <arg name="ns"            value="$(arg ns)"/>
     <arg name="config"        value="$(arg config)"/>
     <arg name="config_id"     value="$(arg config_id)"/>
-    <arg name="use_move_base" value="true"/>
+    <arg name="use_move_base" value="false"/>
   </include>
   
   <!-- View in RVIZ. -->
@@ -41,5 +42,17 @@
       <remap from="/move_base_simple/goal" to="/$(arg ns)/move_base_simple/goal"/>
     </node>
   </group>
+
+   <!-- "Remap" to obtain JA01 and JA01/camera frames-->
+  <node pkg="tf" type="static_transform_publisher" name="camera2body" args="0.25 0 0.184 -1.57 0 -1.57 $(arg ns) $(arg ns)/camera 1" /> 
+  <node pkg="tf" type="static_transform_publisher" name="base2JA01" args="0 0 0 0 0 0 $(arg ns)/base_link $(arg ns) 1" />
+
+   <!-- [Jesus] Use ground truth from gazebo (note that all the nodes of nav.launch should be set to false if using this)-->
+    <node ns="$(arg ns)" name="ground_truth_to_tf" pkg="message_to_tf" type="message_to_tf" output="screen">
+      <param name="odometry_topic" value="ground_truth/state" />
+      <param name="frame_id" value="/world" />
+      <param name="tf_prefix" value="$(arg ns)" />
+    </node>
+
 
 </launch>

@@ -48,6 +48,12 @@
     </link>
     <gazebo reference="${prefix}_wheel_link">
       <material>Gazebo/DarkGrey</material>
+      <selfCollide>false</selfCollide>
+      <mu1 value="0.5"/>
+      <mu2 value="0.5"/>
+      <kp value="10000000.0" />
+      <kd value="1" />
+      <fdir1 value="1 0 0"/>
     </gazebo>
     <joint name="${prefix}_wheel" type="continuous">
       <parent link="chassis_link"/>
@@ -182,7 +188,15 @@
     <child link="front_mount" />
     <origin xyz="${mount_spacing} 0 0" />
   </joint>
-  
+
+  <!--Depth camera -->
+   <!-- Asus Xiton Live Pro -->
+    <xacro:include filename="$(find acl_sim)/urdf/asus_camera.urdf.xacro" />
+    <xacro:asus_camera name="camera" parent="chassis_link">
+     <!-- <origin xyz="0.1 0.0 -0.03" rpy="0 0 0"/>-->
+         <origin xyz="0.25 0.0 ${chassis_height}" rpy="0 0 0"/>
+    </xacro:asus_camera>
+
   <!-- Bring in simulation data for Gazebo. -->
   <xacro:include filename="jackal.gazebo" />
 
